@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">نايت آوت الجزائر</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="register">حساب جديد</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="home">الرئيسية</string>
+    <string name="map">الخريطة</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="search">ابحث عن أماكن...</string>
+    <string name="add_venue">إضافة مكان</string>
+    <string name="admin_dashboard">لوحة التحكم</string>
+    <string name="pending_approvals">الطلبات المعلقة</string>
+    <string name="approve">موافقة</string>
+    <string name="reject">رفض</string>
+    <string name="open">مفتوح</string>
+    <string name="closed">مغلق</string>
+    <string name="call">اتصال</string>
+    <string name="directions">الاتجاهات</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="language">اللغة</string>
+</resources>

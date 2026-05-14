@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Night Out Algeria</string>
+    <string name="login">Connexion</string>
+    <string name="register">S\'inscrire</string>
+    <string name="email">E-mail</string>
+    <string name="password">Mot de passe</string>
+    <string name="home">Accueil</string>
+    <string name="map">Carte</string>
+    <string name="profile">Profil</string>
+    <string name="search">Rechercher des lieux...</string>
+    <string name="add_venue">Ajouter un lieu</string>
+    <string name="admin_dashboard">Tableau de Bord Admin</string>
+    <string name="pending_approvals">En attente</string>
+    <string name="approve">Approuver</string>
+    <string name="reject">Rejeter</string>
+    <string name="open">Ouvert</string>
+    <string name="closed">Fermé</string>
+    <string name="call">Appeler</string>
+    <string name="directions">Itinéraire</string>
+    <string name="logout">Déconnexion</string>
+    <string name="language">Langue</string>
+</resources>

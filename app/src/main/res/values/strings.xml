@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Night Out Algeria</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="home">Home</string>
+    <string name="map">Map</string>
+    <string name="profile">Profile</string>
+    <string name="search">Search venues...</string>
+    <string name="add_venue">Add Venue</string>
+    <string name="admin_dashboard">Admin Dashboard</string>
+    <string name="pending_approvals">Pending Approvals</string>
+    <string name="approve">Approve</string>
+    <string name="reject">Reject</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
+    <string name="call">Call</string>
+    <string name="directions">Directions</string>
+    <string name="logout">Logout</string>
+    <string name="language">Language</string>
+</resources>

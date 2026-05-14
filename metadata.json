@@ -1,0 +1,6 @@
+{
+  "name": "Night Out Algeria",
+  "description": "Android application codebase (Kotlin/Jetpack Compose) for Night Out Algeria with admin dashboard and location features.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
