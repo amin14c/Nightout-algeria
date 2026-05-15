@@ -25,6 +25,7 @@ jobs:
 
     - name: Generate Gradle Wrapper JAR
       run: |
+        touch local.properties
         wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip
         unzip -q gradle-8.4-bin.zip
         ./gradle-8.4/bin/gradle wrapper --gradle-version 8.4
