@@ -9,17 +9,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.nightout.algeria.ui.theme.NeonPurple
+import com.nightout.algeria.ui.viewmodel.AuthState
+import com.nightout.algeria.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     onNavigateToHome: () -> Unit,
-    onNavigateToAdmin: () -> Unit
+    onNavigateToAdmin: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val authState by viewModel.authState.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            val isAdmin = (authState as AuthState.Success).isAdmin
+            if (isAdmin) onNavigateToAdmin() else onNavigateToHome()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -59,19 +71,26 @@ fun LoginScreen(
             )
         )
 
+        if (authState is AuthState.Error) {
+            Text(
+                text = (authState as AuthState.Error).message,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
         Button(
-            onClick = {
-                if (email == "amin14c@gmail.com") {
-                    onNavigateToAdmin()
-                } else {
-                    onNavigateToHome()
-                }
-            },
+            onClick = { viewModel.login(email.trim(), password) },
             modifier = Modifier.fillMaxWidth().height(50.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = NeonPurple)
+            colors = ButtonDefaults.buttonColors(containerColor = NeonPurple),
+            enabled = authState !is AuthState.Loading
         ) {
-            Text("Login")
+            if (authState is AuthState.Loading) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(24.dp))
+            } else {
+                Text("Login")
+            }
         }
 
         TextButton(
@@ -87,11 +106,19 @@ fun LoginScreen(
 @Composable
 fun RegisterScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToHome: () -> Unit
+    onNavigateToHome: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val authState by viewModel.authState.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            onNavigateToHome()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -130,13 +157,26 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp)
         )
 
+        if (authState is AuthState.Error) {
+            Text(
+                text = (authState as AuthState.Error).message,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
         Button(
-            onClick = onNavigateToHome,
+            onClick = { viewModel.register(name.trim(), email.trim(), password) },
             modifier = Modifier.fillMaxWidth().height(50.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = NeonPurple)
+            colors = ButtonDefaults.buttonColors(containerColor = NeonPurple),
+            enabled = authState !is AuthState.Loading
         ) {
-            Text("Register")
+            if (authState is AuthState.Loading) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(24.dp))
+            } else {
+                Text("Register")
+            }
         }
 
         TextButton(onClick = onNavigateBack, modifier = Modifier.padding(top = 16.dp)) {

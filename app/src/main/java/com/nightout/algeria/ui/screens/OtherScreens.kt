@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.nightout.algeria.ui.viewmodel.AuthViewModel
 
 @Composable
 fun DetailScreen(
@@ -37,14 +39,21 @@ fun DetailScreen(
 fun ProfileScreen(
     onNavigateBack: () -> Unit,
     onNavigateToAddVenue: () -> Unit,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Text("Profile Screen", style = MaterialTheme.typography.titleLarge)
         Button(onClick = onNavigateToAddVenue, modifier = Modifier.padding(top = 16.dp)) {
             Text("Add a Venue")
         }
-        Button(onClick = onSignOut, modifier = Modifier.padding(top = 16.dp)) {
+        Button(
+            onClick = {
+                // Here we would call repository direct logout, but for now we trust the top level
+                onSignOut()
+            },
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
             Text("Logout")
         }
         Button(onClick = onNavigateBack, modifier = Modifier.padding(top = 16.dp)) {

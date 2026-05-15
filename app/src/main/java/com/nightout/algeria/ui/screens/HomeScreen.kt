@@ -16,30 +16,36 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.nightout.algeria.data.model.Venue
 import com.nightout.algeria.ui.theme.NeonGold
 import com.nightout.algeria.ui.theme.NeonPurple
 import com.nightout.algeria.ui.theme.SurfaceDark
+import com.nightout.algeria.ui.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onVenueClick: (String) -> Unit,
     onNavigateToMap: () -> Unit,
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val filters = listOf("Tous", "Bar", "Night Club", "Lounge", "Cave", "Rooftop", "Ouvert")
     var selectedFilter by remember { mutableStateOf(filters.first()) }
 
-    // Mock Data
-    val venues = listOf(
-        Venue(id = "1", name = "Neon Club", defaultType = "Night Club", rating = 4.8f, priceRange = "$$$", isOpen = true),
-        Venue(id = "2", name = "Sky Lounge", defaultType = "Rooftop", rating = 4.5f, priceRange = "$$", isOpen = true),
-        Venue(id = "3", name = "Cave Rouge", defaultType = "Cave", rating = 4.2f, priceRange = "$", isOpen = false)
-    )
+    val venues by viewModel.venues.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    val filteredVenues = venues.filter {
+        (selectedFilter == "Tous" || it.defaultType == selectedFilter || (selectedFilter == "Ouvert" && it.isOpen)) &&
+        (it.name.contains(searchQuery, ignoreCase = true))
+    }
 
     Scaffold(
         topBar = {
@@ -96,13 +102,19 @@ fun HomeScreen(
                 }
             }
 
-            // Venues List
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(venues) { venue ->
-                    VenueCard(venue = venue, onClick = { onVenueClick(venue.id) })
+            if (isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = NeonPurple)
+                }
+            } else {
+                // Venues List
+                LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(filteredVenues) { venue ->
+                        VenueCard(venue = venue, onClick = { onVenueClick(venue.id) })
+                    }
                 }
             }
         }
@@ -124,7 +136,7 @@ fun VenueCard(venue: Venue, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(containerColor = SurfaceDark)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // Placeholder for Image
+            // Placeholder for Image (will use Coil later)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
