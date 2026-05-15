@@ -28,7 +28,9 @@ jobs:
         touch local.properties
         wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip
         unzip -q gradle-8.4-bin.zip
-        ./gradle-8.4/bin/gradle wrapper --gradle-version 8.4
+        ./gradle-8.4/bin/gradle wrapper \
+          --gradle-version 8.4 \
+          --gradle-distribution-url "https://services.gradle.org/distributions/gradle-8.4-bin.zip"
         rm -rf gradle-8.4 gradle-8.4-bin.zip
 
     - name: Grant execute permission for gradlew
