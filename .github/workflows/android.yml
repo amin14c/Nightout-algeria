@@ -23,14 +23,16 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Setup Gradle Wrapper JAR
+    # ---------- التغيير هنا ----------
+    # بدلاً من تحميل gradle-8.4.zip الكبير يدوياً، نستخدم الأمر gradle wrapper 
+    # لإنشاء ملف gradle-wrapper.jar جديد وصحيح.
+    - name: Generate Gradle Wrapper
       run: |
-        touch local.properties
-        wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip
-        unzip -q gradle-8.4-bin.zip
-        find gradle-8.4 -name "gradle-wrapper*.jar" \
-          -exec cp {} gradle/wrapper/gradle-wrapper.jar \;
-        rm -rf gradle-8.4 gradle-8.4-bin.zip
+        # حذف الملف التالف إذا وجد
+        rm -f gradle/wrapper/gradle-wrapper.jar
+        # إنشاء ملف جديد (سيرسل Gradle طلب تحميل للنسخة الموجودة في properties)
+        gradle wrapper
+    # ----------------------------------
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
