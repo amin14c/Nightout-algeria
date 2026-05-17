@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.nightout.algeria.data.model.Review
 import com.nightout.algeria.data.model.Venue
 import com.nightout.algeria.data.repository.NightOutRepository
-import com.nightout.algeria.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,8 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VenueDetailViewModel @Inject constructor(
-    private val repository: NightOutRepository,
-    private val authRepository: AuthRepository
+    private val repository: NightOutRepository
 ) : ViewModel() {
 
     private val _venue = MutableStateFlow<Venue?>(null)
@@ -38,7 +36,7 @@ class VenueDetailViewModel @Inject constructor(
 
     fun addReview(venueId: String, rating: Float, comment: String) {
         viewModelScope.launch {
-            val user = authRepository.getCurrentUser()
+            val user = repository.getCurrentUser()
             if (user != null) {
                 val review = Review(
                     venueId = venueId,
