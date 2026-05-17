@@ -112,9 +112,8 @@ fun DetailScreen(
                 }
             }
             item {
-                AnimatedContent(targetState = selectedTab, label = "tabs") { index ->
-                    when (index) {
-                        0 -> Column(Modifier.padding(16.dp)) {
+                when (selectedTab) {
+                    0 -> Column(Modifier.padding(16.dp)) {
                             Text("Description", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                             Spacer(Modifier.height(8.dp))
                             Text(
@@ -137,7 +136,6 @@ fun DetailScreen(
                             Text("Photo gallery coming soon.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
-                }
             }
             item { Spacer(Modifier.height(80.dp)) } // FAB spacing
         }
@@ -417,11 +415,10 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                 }
             }
 
-            AnimatedContent(targetState = selectedTab, label = "AdminTabs") { index ->
-                when (index) {
-                    0 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(3) { item ->
-                            Card(
+            when (selectedTab) {
+                0 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    items(3) { item ->
+                        Card(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                             ) {
@@ -468,7 +465,6 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                         Text("User Management Coming Soon")
                     }
                 }
-            }
         }
     }
 }

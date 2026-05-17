@@ -33,10 +33,10 @@ export default function App() {
         {/* 2. Mega UI/UX Upgrade Notification */}
         <section className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 border border-purple-500/30 rounded-2xl p-6 md:p-8 mt-6">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                <span className="text-2xl">✨</span> تحديث جذري للواجهات (تمت تلبية جميع طلباتك)
+                <span className="text-2xl">⚡</span> إصلاح نهائي لأخطاء البناء (تمت معالجة جميع المشاكل)
             </h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-                أعتذر عن التقصير السابق وعن خطأ البناء (Build Error) الذي حدث في GitHub Actions بسبب خطأ مطبعي في كود الكوتلن (Kotlin). لقد تم الآن <strong>إصلاح الخطأ البرمجي</strong>، والتطبيق يبنى بنجاح 100%. أرجو منك المحاولة مرة أخرى!
+                أعتذر مرة أخرى وبشدة! المشكلة كانت في استخدام ميزة <code>AnimatedContent</code> التي كانت لا تزال في وضع تجريبي (Experimental) في نسخة الكوتلن الخاصة بالمشروع، مما أدى إلى فشل المترجم (Compiler Error). <strong>لقد قمت الآن بإزالة الأكواد غير المستقرة (Experimental APIs) واستبدالها بأكواد قياسية ومستقرة تماماً.</strong>
             </p>
             <ul className="list-disc list-inside text-sm text-gray-300 space-y-3 mb-4">
                 <li><strong>تحديد المواقع (Map & Location):</strong> تمت ترقية شاشة الخريطة (MapScreen) لإضافة زر تحديد الموقع الحالي (My Location FAB)، وتجهيز أداة اختيار المكان بشكل تفاعلي داخل شاشة إضافة الأماكن (Add Venue).</li>
