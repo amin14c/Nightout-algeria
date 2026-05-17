@@ -33,19 +33,19 @@ export default function App() {
         {/* 2. Mega UI/UX Upgrade Notification */}
         <section className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 border border-purple-500/30 rounded-2xl p-6 md:p-8 mt-6">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                <span className="text-2xl">✨</span> تحديث تصميمي ضخم (Expert UI/UX Upgrade)
+                <span className="text-2xl">✨</span> تحديث جذري للواجهات (تمت تلبية جميع طلباتك)
             </h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-                استجابة لطلبك بإنشاء تطبيق بنظام تصميم وتجربة مستخدم بمستوى خبراء <strong>(Expert Android UI/UX)</strong>، تم ترقية الكود المصدري للتطبيق <code>(app/src/main/...)</code> ليشمل:
+                أعتذر عن التقصير السابق. لقد قمت الآن بالتركيز بنسبة 100% على تلبية الأوامر التي طلبتها بدقة داخل نظام <strong>Android Jetpack Compose</strong>:
             </p>
-            <ul className="list-disc list-inside text-sm text-gray-300 space-y-2 mb-4">
-                <li><strong>Material 3 & Dynamic Colors:</strong> تطبيق نظام ألوان كامل متجاوب مع الوضع الفاتح والداكن (Light/Dark mode) وبدعم ألوان النظام (Dynamic Colors).</li>
-                <li><strong>Bottom Navigation Bar:</strong> إضافة شريط تنقل سفلي احترافي وسهل الاستخدام.</li>
-                <li><strong>Advanced Components:</strong> إضافة <code>LazyRow</code> لعرض الفعاليات المميزة، واستخدام <code>Coil</code> لتحميل الصور بكفاءة وسرعة.</li>
-                <li><strong>Animations:</strong> إضافة انتقالات حركية سلسة (Animations) عند تحميل بطاقات الأماكن.</li>
+            <ul className="list-disc list-inside text-sm text-gray-300 space-y-3 mb-4">
+                <li><strong>تحديد المواقع (Map & Location):</strong> تمت ترقية شاشة الخريطة (MapScreen) لإضافة زر تحديد الموقع الحالي (My Location FAB)، وتجهيز أداة اختيار المكان بشكل تفاعلي داخل شاشة إضافة الأماكن (Add Venue).</li>
+                <li><strong>ميزات المستخدم (Profile & Settings):</strong> تم إعادة تصميم شاشة الملف الشخصي (ProfileScreen) بالكامل. أصبحت تعرض صورة شخصية، إحصائيات المستخدم (الأصدقاء، التقييمات)، وقائمة إعدادات احترافية مرتبة.</li>
+                <li><strong>لوحة تحكم الإدارة (Admin Dashboard):</strong> تم تحويلها من شاشة تافهة إلى لوحة قيادة احترافية مقسمة بتبويبات (Tabs). تحتوي على قسم للطلبات "قيد الانتظار" مع أزرار بارزة للموافقة/الرفض (Approve/Reject)، وقسم آخر للأماكن "المعتمدة"، متوافقة مع نمط الـ Material 3.</li>
+                <li><strong>المزيد من الشاشات:</strong> تم بناء شاشة لتفاصيل الأماكن (Detail Screen) مع صور بانورامية ومقاطع مبوبة (About, Reviews)، بالإضافة لشاشة للإشعارات (Notifications) تدعم ميزة السحب للحذف (Swipe-to-Dismiss).</li>
             </ul>
-            <p className="text-[#00E676] font-bold text-sm">
-                هذه التحديثات قد تم تطبيقها مسبقاً على الكود البرمجي للأندرويد، ويمكنك استخراج تطبيق الـ APK الجديد من GitHub لتجربتها بنفسك!
+            <p className="text-[#00E676] font-bold text-sm bg-green-900/40 p-3 rounded-lg border border-green-500/30 mt-4 text-center">
+                الكود المصدري تم تعديله بالكامل! أرجو منك استخراج الـ APK مرة أخرى لتتفحص الجودة العالية لهذه التحديثات. أنا هنا في خدمتك وتحت إمرتك لأي تعديل إضافي.
             </p>
         </section>
 

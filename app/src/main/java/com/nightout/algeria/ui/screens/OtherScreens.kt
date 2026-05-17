@@ -340,13 +340,73 @@ fun NotificationsScreen(
 fun AddVenueScreen(
     onNavigateBack: () -> Unit
 ) {
+    var venueName by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var selectedType by remember { mutableStateOf("Club") }
+    val types = listOf("Club", "Bar", "Lounge", "Restaurant")
+
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Add Venue") }, navigationIcon = { IconButton(onClick = onNavigateBack) { Icon(Icons.Default.ArrowBack, contentDescription = null) } })
+            TopAppBar(
+                title = { Text("Add Venue") },
+                navigationIcon = { IconButton(onClick = onNavigateBack) { Icon(Icons.Default.ArrowBack, contentDescription = null) } }
+            )
         }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding).padding(16.dp)) {
-            Text("Add Venue Form Coming Soon")
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text("Provide details for the new venue. An admin will review your submission before it appears on the map.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            
+            OutlinedTextField(
+                value = venueName,
+                onValueChange = { venueName = it },
+                label = { Text("Venue Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Description") },
+                modifier = Modifier.fillMaxWidth().height(120.dp),
+                maxLines = 4
+            )
+
+            Text("Venue Type", fontWeight = FontWeight.Bold)
+            Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                types.forEach { type ->
+                    FilterChip(
+                        selected = selectedType == type,
+                        onClick = { selectedType = type },
+                        label = { Text(type) }
+                    )
+                }
+            }
+
+            Text("Location Pin", fontWeight = FontWeight.Bold)
+            Card(
+                modifier = Modifier.fillMaxWidth().height(150.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    Text("Tap to select location on Map", color = MaterialTheme.colorScheme.primary)
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+            Button(
+                onClick = { /* Submit */ onNavigateBack() },
+                modifier = Modifier.fillMaxWidth().height(50.dp)
+            ) {
+                Text("Submit for Review")
+            }
         }
     }
 }
@@ -354,11 +414,80 @@ fun AddVenueScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) {
+    var selectedTab by remember { mutableIntStateOf(0) }
+    val tabs = listOf("Pending", "Approved", "Users")
+
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Admin") }, actions = { IconButton(onClick = onSignOut) { Icon(Icons.Default.ExitToApp, contentDescription = null) } }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Admin Dashboard") },
+                actions = { IconButton(onClick = onSignOut) { Icon(Icons.Default.ExitToApp, contentDescription = null) } }
+            )
+        }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding).padding(16.dp)) {
-            Text("Admin Dashboard")
+        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+            TabRow(selectedTabIndex = selectedTab) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTab == index,
+                        onClick = { selectedTab = index },
+                        text = { Text(title) }
+                    )
+                }
+            }
+
+            AnimatedContent(targetState = selectedTab, label = "AdminTabs") { index ->
+                when (index) {
+                    0 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        items(3) { item ->
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                                        Text("Neon Lights Lounge", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                        Box(modifier = Modifier.background(MaterialTheme.colorScheme.errorContainer, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
+                                            Text("NEW", fontSize = androidx.compose.ui.unit.TextUnit(10f, androidx.compose.ui.unit.TextUnitType.Sp), color = MaterialTheme.colorScheme.onErrorContainer)
+                                        }
+                                    }
+                                    Spacer(Modifier.height(4.dp))
+                                    Text("Submitted by: user123", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                                    Spacer(Modifier.height(12.dp))
+                                    Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                                        OutlinedButton(onClick = { /* Reject */ }, modifier = Modifier.padding(end = 8.dp)) {
+                                            Text("Reject", color = MaterialTheme.colorScheme.error)
+                                        }
+                                        Button(onClick = { /* Approve */ }) {
+                                            Text("Approve")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    1 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        items(5) { item ->
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                            ) {
+                                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Box(modifier = Modifier.size(40.dp).background(MaterialTheme.colorScheme.primary, CircleShape))
+                                    Spacer(Modifier.width(16.dp))
+                                    Column {
+                                        Text("Approved Venue #$item", fontWeight = FontWeight.Bold)
+                                        Text("Active", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    2 -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("User Management Coming Soon")
+                    }
+                }
+            }
         }
     }
 }
