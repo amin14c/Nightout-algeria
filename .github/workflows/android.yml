@@ -6,37 +6,32 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-
+    
     - name: set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: gradle
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build APK
+      run: ./gradlew assembleDebug --stacktrace
+      
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/debug/app-debug.apk
 
-    # --- الحل النهائي المباشر ---
-    - name: Download Gradle 8.5.0 (To Bypass Corrupt Wrapper)
-      run: |
-        # 1. حذف ملف الجار التالف
-        rm -f gradle/wrapper/gradle-wrapper.jar
-        
-        # 2. تحميل وتثبيت Gradle 8.5.0
-        wget -q https://services.gradle.org/distributions/gradle-8.5.0-bin.zip
-        unzip -q gradle-8.5.0-bin.zip
-        
-        # 3. منح صلاحية التنفيذ لملف Gradle الذي تم تنزيله
-        chmod +x gradle-8.5.0/bin/gradle
-        
-        # 4. بناء التطبيق مباشرة باستخدام الملف الذي تم تنزيله
-        # (لا نستخدم ./gradlew هنا أبداً)
-        gradle-8.5.0/bin/gradle assembleDebug --stacktrace
-    # ---------------------------
-
-    # تم إزالة خطوات Setup Secrets و Upload APK لأننا نريد تجربة البناء فقط الآن
-    # إذا نجحت هذه الخطوة، سنضيفها مرة أخرى.

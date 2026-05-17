@@ -1,1 +1,29 @@
-
+{
+  "project_info": {
+    "project_number": "725840359382",
+    "project_id": "night-out-algeria",
+    "storage_bucket": "night-out-algeria.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725840359382:android:039bd6c72bb182a0553e77",
+        "android_client_info": {
+          "package_name": "com.nightout.algeria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKAhqrQE8OSgBW18WWDzd2nyUvppN4h1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
