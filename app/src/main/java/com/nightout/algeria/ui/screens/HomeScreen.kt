@@ -213,7 +213,7 @@ fun VenueCardExpert(venue: Venue, onClick: () -> Unit) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.fillMaxWidth().height(180.dp)) {
                 AsyncImage(
-                    model = if (venue.images.isNotEmpty()) venue.images.first() else "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=600&auto=format&fit=crop",
+                    model = if (venue.imageUrls.isNotEmpty()) venue.imageUrls.first() else "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=600&auto=format&fit=crop",
                     contentDescription = venue.name,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()

@@ -135,6 +135,7 @@ fun DetailScreen(
                             Text("Photos", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                             Text("Photo gallery coming soon.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
+                        else -> {}
                     }
             }
             item { Spacer(Modifier.height(80.dp)) } // FAB spacing
@@ -464,6 +465,7 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                     2 -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("User Management Coming Soon")
                     }
+                    else -> {}
                 }
         }
     }
