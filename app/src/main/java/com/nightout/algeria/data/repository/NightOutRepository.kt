@@ -60,6 +60,75 @@ class NightOutRepository @Inject constructor(
         }
     }
 
+    suspend fun getPendingVenues(): List<Venue> {
+        return try {
+            val snapshot = firestore.collection("venues")
+                .whereEqualTo("status", "pending")
+                .get()
+                .await()
+            snapshot.toObjects(Venue::class.java)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun updateVenueStatus(venueId: String, status: String): Result<Unit> {
+        return try {
+            firestore.collection("venues").document(venueId).update("status", status).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteVenue(venueId: String): Result<Unit> {
+        return try {
+            firestore.collection("venues").document(venueId).delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getAllUsers(): List<User> {
+        return try {
+            val snapshot = firestore.collection("users").get().await()
+            snapshot.toObjects(User::class.java)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun updateUserRole(userId: String, role: String): Result<Unit> {
+        return try {
+            firestore.collection("users").document(userId).update("role", role).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getVenueCount(status: String? = null): Int {
+        return try {
+            val query = if (status != null) {
+                firestore.collection("venues").whereEqualTo("status", status)
+            } else {
+                firestore.collection("venues")
+            }
+            query.get().await().size()
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    suspend fun getUserCount(): Int {
+        return try {
+            firestore.collection("users").get().await().size()
+        } catch (e: Exception) {
+            0
+        }
+    }
+
     suspend fun addVenue(venue: Venue): Result<Unit> {
         return try {
             val docRef = firestore.collection("venues").document()

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.nightout.algeria.ui.viewmodel.AuthViewModel
+import com.nightout.algeria.ui.viewmodel.AdminViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -393,7 +394,16 @@ fun AddVenueScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) {
+fun AdminDashboardScreen(
+    onSignOut: () -> Unit,
+    onVenueClick: (String) -> Unit,
+    viewModel: AdminViewModel = hiltViewModel()
+) {
+    val pendingVenues by viewModel.pendingVenues.collectAsState()
+    val approvedVenues by viewModel.approvedVenues.collectAsState()
+    val users by viewModel.users.collectAsState()
+    val stats by viewModel.stats.collectAsState()
+
     var selectedTab by remember { mutableIntStateOf(0) }
     val tabs = listOf("Overview", "Pending", "Approved", "Users")
 
@@ -435,68 +445,75 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                         Card(modifier = Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text("Total Venues", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.labelMedium)
-                                Text("1,204", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                                Text("${stats.totalVenues}", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                             }
                         }
                         Card(modifier = Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text("Total Users", color = MaterialTheme.colorScheme.onSecondaryContainer, style = MaterialTheme.typography.labelMedium)
-                                Text("8,452", color = MaterialTheme.colorScheme.onSecondaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                                Text("${stats.totalUsers}", color = MaterialTheme.colorScheme.onSecondaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
                     Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text("Pending Approvals", color = MaterialTheme.colorScheme.onTertiaryContainer, style = MaterialTheme.typography.labelMedium)
-                            Text("35", color = MaterialTheme.colorScheme.onTertiaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                            Text("${stats.pendingApprovals}", color = MaterialTheme.colorScheme.onTertiaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
                 1 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    items(3) { item ->
-                        Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                            ) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                                        Text("Neon Lights Lounge", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                                        Box(modifier = Modifier.background(MaterialTheme.colorScheme.errorContainer, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
-                                            Text("NEW", fontSize = 10.sp, color = MaterialTheme.colorScheme.onErrorContainer, fontWeight = FontWeight.Bold)
+                    if (pendingVenues.isEmpty()) {
+                        item {
+                            Text("No pending venues.", color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(16.dp))
+                        }
+                    } else {
+                        items(pendingVenues) { venue ->
+                            Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                                    onClick = { onVenueClick(venue.id) }
+                                ) {
+                                    Column(modifier = Modifier.padding(16.dp)) {
+                                        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                                            Text(venue.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                            Box(modifier = Modifier.background(MaterialTheme.colorScheme.errorContainer, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
+                                                Text("PENDING", fontSize = 10.sp, color = MaterialTheme.colorScheme.onErrorContainer, fontWeight = FontWeight.Bold)
+                                            }
                                         }
-                                    }
-                                    Spacer(Modifier.height(8.dp))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.primary)
-                                        Spacer(Modifier.width(4.dp))
-                                        Text("Sidi Yahia, Hydra, Algiers", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                    }
-                                    Spacer(Modifier.height(4.dp))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.secondary)
-                                        Spacer(Modifier.width(4.dp))
-                                        Text("Type: Club • Submitted by: user123", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                                    }
-                                    Spacer(Modifier.height(16.dp))
-                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        OutlinedButton(
-                                            onClick = { /* Reject */ }, 
-                                            modifier = Modifier.weight(1f),
-                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                                        ) {
-                                            Icon(Icons.Default.Clear, contentDescription = null, modifier = Modifier.size(18.dp))
+                                        Spacer(Modifier.height(8.dp))
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.primary)
                                             Spacer(Modifier.width(4.dp))
-                                            Text("Reject")
+                                            Text("Lat: ${venue.latitude}, Lng: ${venue.longitude}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         }
-                                        Button(
-                                            onClick = { /* Approve */ }, 
-                                            modifier = Modifier.weight(1f),
-                                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                                        ) {
-                                            Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
+                                        Spacer(Modifier.height(4.dp))
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.secondary)
                                             Spacer(Modifier.width(4.dp))
-                                            Text("Approve")
+                                            Text("Type: ${venue.defaultType}", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                                        }
+                                        Spacer(Modifier.height(16.dp))
+                                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                            OutlinedButton(
+                                                onClick = { viewModel.rejectVenue(venue.id) }, 
+                                                modifier = Modifier.weight(1f),
+                                                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                                            ) {
+                                                Icon(Icons.Default.Clear, contentDescription = null, modifier = Modifier.size(18.dp))
+                                                Spacer(Modifier.width(4.dp))
+                                                Text("Reject")
+                                            }
+                                            Button(
+                                                onClick = { viewModel.approveVenue(venue.id) }, 
+                                                modifier = Modifier.weight(1f),
+                                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                                            ) {
+                                                Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
+                                                Spacer(Modifier.width(4.dp))
+                                                Text("Approve")
+                                            }
                                         }
                                     }
                                 }
@@ -515,48 +532,60 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                             shape = RoundedCornerShape(12.dp)
                         )
                         LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            items(5) { item ->
-                                var expanded by remember { mutableStateOf(false) }
-                                Card(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-                                ) {
-                                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                        Box(
-                                            modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp)),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Icon(Icons.Default.Star, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
-                                        }
-                                        Spacer(Modifier.width(16.dp))
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text("Approved Venue #$item", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                                            Text("Active • 4.5 ★", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
-                                        }
-                                        Box {
-                                            IconButton(onClick = { expanded = true }) {
-                                                Icon(Icons.Default.MoreVert, contentDescription = "More actions")
-                                            }
-                                            DropdownMenu(
-                                                expanded = expanded,
-                                                onDismissRequest = { expanded = false }
+                            val filteredVenues = approvedVenues.filter { it.name.contains(searchQuery, ignoreCase = true) }
+                            if (filteredVenues.isEmpty()) {
+                                item { Text("No approved venues found.", modifier = Modifier.padding(16.dp)) }
+                            } else {
+                                items(filteredVenues) { venue ->
+                                    var expanded by remember { mutableStateOf(false) }
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                                        onClick = { onVenueClick(venue.id) }
+                                    ) {
+                                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                            Box(
+                                                modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp)),
+                                                contentAlignment = Alignment.Center
                                             ) {
-                                                DropdownMenuItem(
-                                                    text = { Text("Edit") },
-                                                    onClick = { expanded = false },
-                                                    leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
-                                                )
-                                                DropdownMenuItem(
-                                                    text = { Text("Suspend") },
-                                                    onClick = { expanded = false },
-                                                    leadingIcon = { Icon(Icons.Default.Info, contentDescription = null) } // using Info as placeholder for pause/suspend
-                                                )
-                                                DropdownMenuItem(
-                                                    text = { Text("Delete", color = MaterialTheme.colorScheme.error) },
-                                                    onClick = { expanded = false },
-                                                    leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
-                                                )
+                                                Icon(Icons.Default.Star, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                                            }
+                                            Spacer(Modifier.width(16.dp))
+                                            Column(modifier = Modifier.weight(1f)) {
+                                                Text(venue.name, fontWeight = FontWeight.Bold, maxLines = 1, style = MaterialTheme.typography.titleMedium)
+                                                Text("Active • ${venue.rating} ★", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                                            }
+                                            Box {
+                                                IconButton(onClick = { expanded = true }) {
+                                                    Icon(Icons.Default.MoreVert, contentDescription = "More actions")
+                                                }
+                                                DropdownMenu(
+                                                    expanded = expanded,
+                                                    onDismissRequest = { expanded = false }
+                                                ) {
+                                                    DropdownMenuItem(
+                                                        text = { Text("Edit") },
+                                                        onClick = { expanded = false },
+                                                        leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
+                                                    )
+                                                    DropdownMenuItem(
+                                                        text = { Text("Suspend") },
+                                                        onClick = { 
+                                                            expanded = false
+                                                            viewModel.suspendVenue(venue.id)
+                                                        },
+                                                        leadingIcon = { Icon(Icons.Default.Info, contentDescription = null) } 
+                                                    )
+                                                    DropdownMenuItem(
+                                                        text = { Text("Delete", color = MaterialTheme.colorScheme.error) },
+                                                        onClick = { 
+                                                            expanded = false
+                                                            viewModel.deleteVenue(venue.id)
+                                                        },
+                                                        leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                                                    )
+                                                }
                                             }
                                         }
                                     }
@@ -576,43 +605,54 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                             shape = RoundedCornerShape(12.dp)
                         )
                         LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            items(8) { item ->
-                                var expanded by remember { mutableStateOf(false) }
-                                Card(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-                                ) {
-                                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                        Box(
-                                            modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Text("U", color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.Bold)
-                                        }
-                                        Spacer(Modifier.width(16.dp))
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text("User_${100 + item}", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                                            Text(if (item == 0) "Role: Admin" else "Role: Standard", color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall)
-                                        }
-                                        Box {
-                                            IconButton(onClick = { expanded = true }) {
-                                                Icon(Icons.Default.MoreVert, contentDescription = "More actions")
-                                            }
-                                            DropdownMenu(
-                                                expanded = expanded,
-                                                onDismissRequest = { expanded = false }
+                            val filteredUsers = users.filter { it.name.contains(userSearch, ignoreCase = true) || it.email.contains(userSearch, ignoreCase = true) }
+                            if (filteredUsers.isEmpty()) {
+                                item { Text("No users found.", modifier = Modifier.padding(16.dp)) }
+                            } else {
+                                items(filteredUsers) { user ->
+                                    var expanded by remember { mutableStateOf(false) }
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                                    ) {
+                                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                            Box(
+                                                modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+                                                contentAlignment = Alignment.Center
                                             ) {
-                                                DropdownMenuItem(
-                                                    text = { Text("Make Admin") },
-                                                    onClick = { expanded = false },
-                                                    leadingIcon = { Icon(Icons.Default.Star, contentDescription = null) }
-                                                )
-                                                DropdownMenuItem(
-                                                    text = { Text("Block User", color = MaterialTheme.colorScheme.error) },
-                                                    onClick = { expanded = false },
-                                                    leadingIcon = { Icon(Icons.Default.Clear, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
-                                                )
+                                                Text(user.name.take(1).uppercase(), color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.Bold)
+                                            }
+                                            Spacer(Modifier.width(16.dp))
+                                            Column(modifier = Modifier.weight(1f)) {
+                                                Text(user.name, fontWeight = FontWeight.Bold, maxLines = 1, style = MaterialTheme.typography.titleMedium)
+                                                Text("Role: ${user.role} • ${user.email}", color = MaterialTheme.colorScheme.secondary, maxLines = 1, style = MaterialTheme.typography.bodySmall)
+                                            }
+                                            Box {
+                                                IconButton(onClick = { expanded = true }) {
+                                                    Icon(Icons.Default.MoreVert, contentDescription = "More actions")
+                                                }
+                                                DropdownMenu(
+                                                    expanded = expanded,
+                                                    onDismissRequest = { expanded = false }
+                                                ) {
+                                                    DropdownMenuItem(
+                                                        text = { Text("Make Admin") },
+                                                        onClick = { 
+                                                            expanded = false
+                                                            viewModel.promoteUser(user.id)
+                                                        },
+                                                        leadingIcon = { Icon(Icons.Default.Star, contentDescription = null) }
+                                                    )
+                                                    DropdownMenuItem(
+                                                        text = { Text("Block User", color = MaterialTheme.colorScheme.error) },
+                                                        onClick = { 
+                                                            expanded = false
+                                                            viewModel.blockUser(user.id)
+                                                        },
+                                                        leadingIcon = { Icon(Icons.Default.Clear, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                                                    )
+                                                }
                                             }
                                         }
                                     }
