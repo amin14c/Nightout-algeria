@@ -15,6 +15,7 @@ sealed class Screen(val route: String) {
     object Profile : Screen("profile")
     object AdminDashboard : Screen("admin_dashboard")
     object AddVenue : Screen("add_venue")
+    object Notifications : Screen("notifications")
     object Detail : Screen("detail/{venueId}") {
         fun createRoute(venueId: String) = "detail/$venueId"
     }
@@ -76,7 +77,8 @@ fun NightOutNavGraph() {
                     navController.navigate(Screen.Detail.createRoute(venueId))
                 },
                 onNavigateToMap = { navController.navigate(Screen.Map.route) },
-                onNavigateToProfile = { navController.navigate(Screen.Profile.route) }
+                onNavigateToProfile = { navController.navigate(Screen.Profile.route) },
+                onNavigateToNotifications = { navController.navigate(Screen.Notifications.route) }
             )
         }
         
@@ -111,6 +113,12 @@ fun NightOutNavGraph() {
         
         composable(Screen.AddVenue.route) {
             AddVenueScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable(Screen.Notifications.route) {
+            NotificationsScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
