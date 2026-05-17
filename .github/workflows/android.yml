@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,18 +20,17 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # --- الحل النهائي ---
-    - name: Fix Gradle Wrapper
+    # --- الطريقة الصحيحة لإصلاح Gradle Wrapper ---
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Create a valid gradle-wrapper.jar
       run: |
-        # 1. حذف الملف التالف إذا وجد
-        rm -f gradle/wrapper/gradle-wrapper.jar
-        
-        # 2. تنزيل gradle-wrapper.jar الصحيح (بدون فك ضغط)
-        curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar
-        
-        # 3. منح صلاحية التنفيذ
-        chmod +x gradlew
-    # -------------------
+        # هذه الخطوة ستقوم بتنزيل Gradle وتثبيته (بفضل cache) 
+        # واستخدامه لإنشاء ملف Wrapper صحيح 100%.
+        ./gradlew wrapper --gradle-version 8.5.0
+
+    # -------------------------------------------
 
     - name: Setup Real Projects Secrets
       env:
