@@ -39,6 +39,15 @@ class NightOutRepository @Inject constructor(
         }
     }
 
+    suspend fun resetPassword(email: String): Result<Unit> {
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun getApprovedVenues(): List<Venue> {
         return try {
             val snapshot = firestore.collection("venues")

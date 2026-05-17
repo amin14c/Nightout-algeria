@@ -16,6 +16,9 @@ class AuthViewModel @Inject constructor(
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState
+    
+    private val _resetPasswordState = MutableStateFlow<String?>(null)
+    val resetPasswordState: StateFlow<String?> = _resetPasswordState
 
     fun login(email: String, pass: String) {
         viewModelScope.launch {
@@ -43,6 +46,29 @@ class AuthViewModel @Inject constructor(
 
     fun checkUserSession(): Boolean {
         return repository.getCurrentUser() != null
+    }
+
+    fun resetPassword(email: String) {
+        if (email.isBlank()) {
+            _resetPasswordState.value = "Please enter your email first"
+            return
+        }
+        viewModelScope.launch {
+            val result = repository.resetPassword(email)
+            if (result.isSuccess) {
+                _resetPasswordState.value = "Password reset email sent!"
+            } else {
+                _resetPasswordState.value = result.exceptionOrNull()?.message ?: "Error sending reset email"
+            }
+        }
+    }
+    
+    fun clearResetState() {
+        _resetPasswordState.value = null
+    }
+    
+    fun clearAuthState() {
+        _authState.value = AuthState.Idle
     }
 }
 

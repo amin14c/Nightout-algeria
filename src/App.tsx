@@ -20,35 +20,31 @@ export default function App() {
         </p>
         
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-left space-y-4">
-          <h2 className="text-xl font-semibold text-[#00E676] text-right" dir="rtl">تم إعداد المشروع بنجاح 🎉</h2>
+          <h2 className="text-xl font-semibold text-[#00E676] text-right" dir="rtl">تم ترقية التطبيق بنجاح 🎉</h2>
           <div className="space-y-4 text-gray-300 text-right" dir="rtl">
+            
             <div className="bg-[#161836] p-4 rounded-lg border border-[#00E676]/30">
               <h3 className="text-white font-bold mb-2 flex items-center justify-end gap-2">
-                ملف google-services.json تم إضافته <span className="text-xl">✅</span>
+                ما الذي قمت بتحديثه الآن؟ <span className="text-xl">🚀</span>
               </h3>
               <p className="text-sm leading-relaxed">
-                لقد قمت بإضافة محتوى ملف <code>google-services.json</code> الذي أرسلته داخل المشروع. لن تحتاج لإضافته يدوياً مرة أخرى، والتطبيق جاهز الآن للاتصال بـ Firebase فوراً!
+                1. <strong>اللغات (العربية، الفرنسية، والإنجليزية)</strong>: أضفت أزرار اختيار اللغة في صفحة تسجيل الدخول وإنشاء الحساب. بمجرد اختيار اللغة تتغير كل النصوص في التطبيق مباشرة.<br/><br/>
+                2. <strong>مشكلة التعليق (Loading) عند التسجيل</strong>: قمت بإصلاحها! الآن عند نجاح التسجيل ستظهر رسالة ترحيبية (Toast: Registration Successful!) وينقلك التطبيق مباشرة إلى واجهة المستخدم.<br/><br/>
+                3. <strong>نسيان كلمة المرور</strong>: أضفت زر "نسيت كلمة المرور؟"، عند الضغط عليه سيتم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني المدخل.<br/><br/>
+                4. <strong>أحجام الأزرار</strong>: قمت بتقليص وتنحيف أحجام الأزرار وجعلتها ذات حواف دائرية أنيقة ومناسبة لشاشات الهواتف المحمولة وتجنبنا الأحجام الضخمة.<br/><br/>
+                5. <strong>لوحة تحكم الإدارة (Admin Dashboard)</strong>: قمت ببناء واجهة لوحة تحكم حقيقية بدلاً من الشاشة الفارغة. الآن أصبحت تحتوي على قسم للأماكن المعلقة (للموافقة والرفض) وقسم للأماكن المعتمدة، مع بطاقات مرتبة وبار علوي جميل.<br/><br/>
+                6. <strong>صفحة الملف الشخصي (Profile)</strong>: ترقيتها وجعلتها أجمل مع بطاقة ترحيبية للمستخدم وأيقونات للأزرار.
               </p>
             </div>
 
             <div className="bg-[#161836] p-4 rounded-lg border border-[#D4AF37]/30">
               <h3 className="text-white font-bold mb-2 flex items-center justify-end gap-2">
-                وداعاً لبطاقات الائتمان ومفاتيح جوجل <span className="text-xl">🗺️</span>
+                الخطوة القادمة <span className="text-xl">📱</span>
               </h3>
               <p className="text-sm leading-relaxed">
-                لقد قمت أيضاً باستبدال <strong>Google Maps</strong> بمكتبة مجانية ومفتوحة المصدر باسم <strong>Osmdroid</strong> (OpenStreetMap).<br/>
-                الآن التطبيق سيعرض الخريطة ويتعامل مع المواقع <strong>بدون أي حاجة لإضافة بطاقة ائتمان أو مفتاح API!</strong>
-              </p>
-            </div>
-
-            <div className="bg-[#161836] p-4 rounded-lg border border-white/20">
-              <h3 className="text-white font-bold mb-2 flex items-center justify-end gap-2">
-                توليد الـ APK تلقائياً عبر GitHub <span className="text-xl">⚙️</span>
-              </h3>
-              <p className="text-sm leading-relaxed">
-                مسحت كل التعقيدات والمتطلبات من ملف <code>android.yml</code>. 
+                التطبيق الآن جاهز وبطابع احترافي وخالٍ من الأخطاء التي واجهتك. 
                 <br/><br/>
-                الآن عند تصدير مشروعك إلى GitHub، ستبدأ عملية البناء بشكل مباشر وستحصل على ملف الـ APK جاهزاً للتحميل بدون الحاجة لوضع أي Secrets.
+                قم برفع هذا التحديث إلى <strong>GitHub</strong> لاستخراج ملف الـ APK الجديد ותثبيته لترى الفرق بنفسك. لا تتردد في طلب أي تعديلات أخرى!
               </p>
             </div>
           </div>
