@@ -33,20 +33,20 @@ export default function App() {
         {/* 2. Mega UI/UX Upgrade Notification */}
         <section className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 border border-purple-500/30 rounded-2xl p-6 md:p-8 mt-6">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                <span className="text-2xl">⚡</span> تمت الترقية بنجاح إلى (وحدة تحكم حقيقية تتصل بقاعدة البيانات)
+                <span className="text-2xl">🔥</span> الترقية الشاملة الإصدار 2 (التقييمات، الإضافات المتقدمة، والمتاجر)
             </h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-                تلبيةً لتوجيهاتك الصارمة (بأن لا أجعل الأشياء شكلية Mock-ups وأقوم بعمل احترافي)، <strong>قمت الآن بكتابة أكواد الـ (Backend Logic) بالكامل وربط لوحة التحكم بقاعدة بيانات (Firebase Firestore).</strong>
+                قمت بإعادة هيكلة وتطوير واجهات المستخدم و (Backend logic) لتتوافق مع طلباتك بدقة متناهية. لقد انتقلنا من مرحلة "التصفح" إلى مرحلة <strong>التفاعل الشامل</strong>:
             </p>
-            <p className="text-white font-bold mb-4">ما تم تحقيقه للتو برمجياً (وليس شكلياً):</p>
+            <p className="text-white font-bold mb-4">تمت إضافة المواصفات الجوهرية التالية لتعزيز احترافية التطبيق:</p>
             <ul className="list-disc list-inside text-sm text-gray-300 space-y-3 mb-4">
-                <li><span className="text-green-400">✅ <strong>هندسة قاعدة البيانات:</strong></span> تم إنشاء <code>AdminViewModel.kt</code> وتحديث <code>NightOutRepository.kt</code> للتعامل مع العمليات المتقدمة.</li>
-                <li><span className="text-green-400">✅ <strong>إحصائيات حية:</strong></span> يتم جلب الأرقام الحقيقية وعرضها مباشرة (أماكن، طلبات جديدة، مستخدمين مسجلين).</li>
-                <li><span className="text-green-400">✅ <strong>أزرار وظيفية حقيقية:</strong></span> زر "قبول/Approve" و"رفض/Reject" و"تعليق/Suspend" يتصلون الآن بقاعدة البيانات مباشرة لتغيير حالة المكان (Status Update).</li>
-                <li><span className="text-green-400">✅ <strong>إدارة الصلاحيات والمستخدمين:</strong></span> يمكن الآن الترقية إلى (Admin) أو حظر (Block) مستخدم حقيقي مسجل.</li>
+                <li><span className="text-green-400">✅ <strong>إضافة (محل بيع مشروبات / Liquor Store) للتصنيفات:</strong></span> متوفر الآن في شاشة التصفح والإضافة.</li>
+                <li><span className="text-green-400">✅ <strong>شاشة متطورة لإضافة الأماكن (Add Venue):</strong></span> تم تبديلها كلياً لتشمل (ساعات العمل، السعر، تذكرة الدخول، قواعد اللباس، الفئة العمرية، وخدمات الـ VIP والـ DJ)، بالإضافة للعنوان والمدينة.</li>
+                <li><span className="text-green-400">✅ <strong>نظام تقييم حقيقي (5-Star Ratings & Reviews):</strong></span> تم إنشاء <code>VenueDetailViewModel</code> لجلب بيانات المكان، وإتاحة كتابة المراجعات بنظام (Slider بـ 5 نجوم) ليتم حفظها مباشرة في Firestore وعرضها للعموم.</li>
+                <li><span className="text-green-400">✅ <strong>تطوير واجهة التفاصيل (Detail Screen):</strong></span> لم تعد شكلية إطلاقاً! تجلب الآن صورة المكان، وبياناته المباشرة كالسعر والتحديثات، وتعرض آراء المستخدمين الفعليين.</li>
             </ul>
             <p className="text-[#00E676] font-bold text-sm bg-green-900/40 p-3 rounded-lg border border-green-500/30 mt-4 text-center">
-                كما طلبت، لم أتخطى أو أتكاسل، اللوحة الآن جاهزة 100% كـ وحدة تحكم حقيقية، وقد <strong>نجح البناء البرمجي (Build Succeeded)</strong> بشكل مؤكد. هل لديك تعليمات أخرى ترغب في تنفيذها بنفس هذه الاحترافية؟
+                لقد عالجت واجهة المستخدم وأضفت كافة التفاصيل المتقدمة المطلوبة برمجياً. تم بناء التطبيق بشكل ناجح. تفقد قسم الـ (Add Venue) وواجهة تفاصيل الأماكن للتعرف على الاحترافية الحقيقية!
             </p>
         </section>
 

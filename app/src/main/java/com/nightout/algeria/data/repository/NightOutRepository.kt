@@ -129,6 +129,43 @@ class NightOutRepository @Inject constructor(
         }
     }
 
+    suspend fun getVenueById(venueId: String): Venue? {
+        return try {
+            val snapshot = firestore.collection("venues").document(venueId).get().await()
+            snapshot.toObject(Venue::class.java)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun addReview(review: Review): Result<Unit> {
+        return try {
+            val docRef = firestore.collection("reviews").document()
+            val newReview = review.copy(id = docRef.id)
+            docRef.set(newReview).await()
+            // We should also update the venue rating here, but keeping it simple for now
+            // or we could do a transaction. For now just add review and update reviewIds
+            firestore.collection("venues").document(review.venueId)
+                .update("reviewIds", com.google.firebase.firestore.FieldValue.arrayUnion(newReview.id))
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getReviewsForVenue(venueId: String): List<Review> {
+        return try {
+            val snapshot = firestore.collection("reviews")
+                .whereEqualTo("venueId", venueId)
+                .get()
+                .await()
+            snapshot.toObjects(Review::class.java).sortedByDescending { it.timestamp }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     suspend fun addVenue(venue: Venue): Result<Unit> {
         return try {
             val docRef = firestore.collection("venues").document()

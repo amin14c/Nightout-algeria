@@ -38,7 +38,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    val filters = listOf("All", "Bar", "Night Club", "Lounge", "Rooftop")
+    val filters = listOf("All", "Bar", "Night Club", "Lounge", "Rooftop", "Liquor Store")
     var selectedFilter by remember { mutableStateOf(filters.first()) }
     var selectedTab by remember { mutableIntStateOf(0) }
 
