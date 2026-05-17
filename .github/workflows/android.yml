@@ -20,39 +20,23 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # --- الطريقة الصحيحة لإصلاح Gradle Wrapper ---
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Create a valid gradle-wrapper.jar
+    # --- الحل النهائي المباشر ---
+    - name: Download Gradle 8.5.0 (To Bypass Corrupt Wrapper)
       run: |
-        # هذه الخطوة ستقوم بتنزيل Gradle وتثبيته (بفضل cache) 
-        # واستخدامه لإنشاء ملف Wrapper صحيح 100%.
-        ./gradlew wrapper --gradle-version 8.5.0
+        # 1. حذف ملف الجار التالف
+        rm -f gradle/wrapper/gradle-wrapper.jar
+        
+        # 2. تحميل وتثبيت Gradle 8.5.0
+        wget -q https://services.gradle.org/distributions/gradle-8.5.0-bin.zip
+        unzip -q gradle-8.5.0-bin.zip
+        
+        # 3. منح صلاحية التنفيذ لملف Gradle الذي تم تنزيله
+        chmod +x gradle-8.5.0/bin/gradle
+        
+        # 4. بناء التطبيق مباشرة باستخدام الملف الذي تم تنزيله
+        # (لا نستخدم ./gradlew هنا أبداً)
+        gradle-8.5.0/bin/gradle assembleDebug --stacktrace
+    # ---------------------------
 
-    # -------------------------------------------
-
-    - name: Setup Real Projects Secrets
-      env:
-        MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
-        GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      run: |
-        if [ -z "$MAPS_API_KEY" ]; then
-          echo "MAPS_API_KEY=dummy_key_for_build_only" > local.properties
-        else
-          echo "MAPS_API_KEY=$MAPS_API_KEY" > local.properties
-        fi
-        if [ -z "$GOOGLE_SERVICES_JSON" ]; then
-          echo "{}" > app/google-services.json
-        else
-          echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
-        fi
-      
-    - name: Build APK
-      run: ./gradlew assembleDebug --stacktrace
-      
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+    # تم إزالة خطوات Setup Secrets و Upload APK لأننا نريد تجربة البناء فقط الآن
+    # إذا نجحت هذه الخطوة، سنضيفها مرة أخرى.
