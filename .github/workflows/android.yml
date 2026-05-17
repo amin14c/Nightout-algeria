@@ -23,26 +23,26 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # ---------- التغيير هنا ----------
-    # بدلاً من تحميل gradle-8.4.zip الكبير يدوياً، نستخدم الأمر gradle wrapper 
-    # لإنشاء ملف gradle-wrapper.jar جديد وصحيح.
+    # إصلاح ملف gradle-wrapper.jar التالف
     - name: Generate Gradle Wrapper
       run: |
-        # حذف الملف التالف إذا وجد
         rm -f gradle/wrapper/gradle-wrapper.jar
-        # إنشاء ملف جديد (سيرسل Gradle طلب تحميل للنسخة الموجودة في properties)
         gradle wrapper
-    # ----------------------------------
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    # تجاوز مفاتيح الـ API المفقودة
     - name: Setup Real Projects Secrets
       env:
         MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
         GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       run: |
-        echo "MAPS_API_KEY=$MAPS_API_KEY" > local.properties
+        if [ -z "$MAPS_API_KEY" ]; then
+          echo "MAPS_API_KEY=dummy_key_for_build_only" > local.properties
+        else
+          echo "MAPS_API_KEY=$MAPS_API_KEY" > local.properties
+        fi
         echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
       
     - name: Build APK
