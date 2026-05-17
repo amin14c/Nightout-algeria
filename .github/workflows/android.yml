@@ -23,27 +23,44 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # إصلاح ملف gradle-wrapper.jar التالف
-    - name: Generate Gradle Wrapper
+    # --- الحل النهائي لمشكلة Gradle Wrapper ---
+    - name: Download and fix Gradle Wrapper
       run: |
+        # 1. حذف الملف التالف
         rm -f gradle/wrapper/gradle-wrapper.jar
-        gradle wrapper
+        
+        # 2. تحميل Gradle 8.0.2 (نسخة مستقرة ومتوافقة)
+        wget -q https://services.gradle.org/distributions/gradle-8.0.2-bin.zip
+        unzip -q gradle-8.0.2-bin.zip
+        
+        # 3. استخدام الإصدار الذي تم تنزيله لإنشاء Wrapper صحيح
+        gradle-8.0.2/bin/gradle wrapper
+        
+        # 4. تنظيف الملفات الزائدة
+        rm -rf gradle-8.0.2 gradle-8.0.2-bin.zip
+    # -----------------------------------------
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # تجاوز مفاتيح الـ API المفقودة
     - name: Setup Real Projects Secrets
       env:
         MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
         GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       run: |
+        # تجاوز عدم وجود مفتاح الخريطة
         if [ -z "$MAPS_API_KEY" ]; then
           echo "MAPS_API_KEY=dummy_key_for_build_only" > local.properties
         else
           echo "MAPS_API_KEY=$MAPS_API_KEY" > local.properties
         fi
-        echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
+
+        # تجاوز عدم وجود ملف google-services.json
+        if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+          echo "{}" > app/google-services.json
+        else
+          echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
+        fi
       
     - name: Build APK
       run: ./gradlew assembleDebug --stacktrace
