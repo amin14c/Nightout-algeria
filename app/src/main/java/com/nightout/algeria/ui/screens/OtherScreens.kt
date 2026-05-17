@@ -395,7 +395,7 @@ fun AddVenueScreen(
 @Composable
 fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) {
     var selectedTab by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Pending", "Approved", "Users")
+    val tabs = listOf("Overview", "Pending", "Approved", "Users")
 
     Scaffold(
         topBar = {
@@ -403,10 +403,19 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                 title = { Text("Admin Dashboard") },
                 actions = { IconButton(onClick = onSignOut) { Icon(Icons.Default.ExitToApp, contentDescription = null) } }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /* Broadcast Notification */ }, containerColor = MaterialTheme.colorScheme.primaryContainer) {
+                Icon(Icons.Default.Notifications, contentDescription = "Broadcast Notification", tint = MaterialTheme.colorScheme.onPrimaryContainer)
+            }
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxSize()) {
-            TabRow(selectedTabIndex = selectedTab) {
+            ScrollableTabRow(
+                selectedTabIndex = selectedTab,
+                edgePadding = 0.dp,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         selected = selectedTab == index,
@@ -417,27 +426,76 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
             }
 
             when (selectedTab) {
-                0 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                0 -> Column(
+                    modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text("Dashboard Overview", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Card(modifier = Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text("Total Venues", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.labelMedium)
+                                Text("1,204", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                        Card(modifier = Modifier.weight(1f), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text("Total Users", color = MaterialTheme.colorScheme.onSecondaryContainer, style = MaterialTheme.typography.labelMedium)
+                                Text("8,452", color = MaterialTheme.colorScheme.onSecondaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+                    Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text("Pending Approvals", color = MaterialTheme.colorScheme.onTertiaryContainer, style = MaterialTheme.typography.labelMedium)
+                            Text("35", color = MaterialTheme.colorScheme.onTertiaryContainer, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+                1 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     items(3) { item ->
                         Card(
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                             ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
                                     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                                         Text("Neon Lights Lounge", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                                         Box(modifier = Modifier.background(MaterialTheme.colorScheme.errorContainer, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
-                                            Text("NEW", fontSize = 10.sp, color = MaterialTheme.colorScheme.onErrorContainer)
+                                            Text("NEW", fontSize = 10.sp, color = MaterialTheme.colorScheme.onErrorContainer, fontWeight = FontWeight.Bold)
                                         }
                                     }
+                                    Spacer(Modifier.height(8.dp))
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.primary)
+                                        Spacer(Modifier.width(4.dp))
+                                        Text("Sidi Yahia, Hydra, Algiers", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    }
                                     Spacer(Modifier.height(4.dp))
-                                    Text("Submitted by: user123", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                                    Spacer(Modifier.height(12.dp))
-                                    Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                                        OutlinedButton(onClick = { /* Reject */ }, modifier = Modifier.padding(end = 8.dp)) {
-                                            Text("Reject", color = MaterialTheme.colorScheme.error)
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.secondary)
+                                        Spacer(Modifier.width(4.dp))
+                                        Text("Type: Club • Submitted by: user123", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                                    }
+                                    Spacer(Modifier.height(16.dp))
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        OutlinedButton(
+                                            onClick = { /* Reject */ }, 
+                                            modifier = Modifier.weight(1f),
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                                        ) {
+                                            Icon(Icons.Default.Clear, contentDescription = null, modifier = Modifier.size(18.dp))
+                                            Spacer(Modifier.width(4.dp))
+                                            Text("Reject")
                                         }
-                                        Button(onClick = { /* Approve */ }) {
+                                        Button(
+                                            onClick = { /* Approve */ }, 
+                                            modifier = Modifier.weight(1f),
+                                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                                        ) {
+                                            Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
+                                            Spacer(Modifier.width(4.dp))
                                             Text("Approve")
                                         }
                                     }
@@ -445,25 +503,122 @@ fun AdminDashboardScreen(onSignOut: () -> Unit, onVenueClick: (String) -> Unit) 
                             }
                         }
                     }
-                    1 -> LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(5) { item ->
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                            ) {
-                                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    Box(modifier = Modifier.size(40.dp).background(MaterialTheme.colorScheme.primary, CircleShape))
-                                    Spacer(Modifier.width(16.dp))
-                                    Column {
-                                        Text("Approved Venue #$item", fontWeight = FontWeight.Bold)
-                                        Text("Active", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                    2 -> Column(modifier = Modifier.fillMaxSize()) {
+                        var searchQuery by remember { mutableStateOf("") }
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            placeholder = { Text("Search approved venues...") },
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                            singleLine = true,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            items(5) { item ->
+                                var expanded by remember { mutableStateOf(false) }
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                                ) {
+                                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                        Box(
+                                            modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp)),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(Icons.Default.Star, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                                        }
+                                        Spacer(Modifier.width(16.dp))
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text("Approved Venue #$item", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                            Text("Active • 4.5 ★", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                                        }
+                                        Box {
+                                            IconButton(onClick = { expanded = true }) {
+                                                Icon(Icons.Default.MoreVert, contentDescription = "More actions")
+                                            }
+                                            DropdownMenu(
+                                                expanded = expanded,
+                                                onDismissRequest = { expanded = false }
+                                            ) {
+                                                DropdownMenuItem(
+                                                    text = { Text("Edit") },
+                                                    onClick = { expanded = false },
+                                                    leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
+                                                )
+                                                DropdownMenuItem(
+                                                    text = { Text("Suspend") },
+                                                    onClick = { expanded = false },
+                                                    leadingIcon = { Icon(Icons.Default.Info, contentDescription = null) } // using Info as placeholder for pause/suspend
+                                                )
+                                                DropdownMenuItem(
+                                                    text = { Text("Delete", color = MaterialTheme.colorScheme.error) },
+                                                    onClick = { expanded = false },
+                                                    leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    2 -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("User Management Coming Soon")
+                    3 -> Column(modifier = Modifier.fillMaxSize()) {
+                        var userSearch by remember { mutableStateOf("") }
+                        OutlinedTextField(
+                            value = userSearch,
+                            onValueChange = { userSearch = it },
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            placeholder = { Text("Search users...") },
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                            singleLine = true,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            items(8) { item ->
+                                var expanded by remember { mutableStateOf(false) }
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                                ) {
+                                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                        Box(
+                                            modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text("U", color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.Bold)
+                                        }
+                                        Spacer(Modifier.width(16.dp))
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text("User_${100 + item}", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                            Text(if (item == 0) "Role: Admin" else "Role: Standard", color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall)
+                                        }
+                                        Box {
+                                            IconButton(onClick = { expanded = true }) {
+                                                Icon(Icons.Default.MoreVert, contentDescription = "More actions")
+                                            }
+                                            DropdownMenu(
+                                                expanded = expanded,
+                                                onDismissRequest = { expanded = false }
+                                            ) {
+                                                DropdownMenuItem(
+                                                    text = { Text("Make Admin") },
+                                                    onClick = { expanded = false },
+                                                    leadingIcon = { Icon(Icons.Default.Star, contentDescription = null) }
+                                                )
+                                                DropdownMenuItem(
+                                                    text = { Text("Block User", color = MaterialTheme.colorScheme.error) },
+                                                    onClick = { expanded = false },
+                                                    leadingIcon = { Icon(Icons.Default.Clear, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     else -> {}
                 }
