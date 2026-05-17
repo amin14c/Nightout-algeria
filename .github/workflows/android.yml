@@ -23,15 +23,13 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # --- تحديث Gradle إلى 8.5.0 ---
-    - name: Download and fix Gradle Wrapper
+    # --- الحل الأبسط لإنشاء Wrapper ---
+    # نقوم بحذف الملف التالف فقط إذا كان موجوداً، ثم نستخدم الأمر wrapper
+    - name: Generate Gradle Wrapper
       run: |
         rm -f gradle/wrapper/gradle-wrapper.jar
-        wget -q https://services.gradle.org/distributions/gradle-8.5.0-bin.zip
-        unzip -q gradle-8.5.0-bin.zip
-        gradle-8.5.0/bin/gradle wrapper
-        rm -rf gradle-8.5.0 gradle-8.5.0-bin.zip
-    # -------------------------------
+        ./gradlew wrapper --gradle-version 8.5.0
+    # ----------------------------------
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
