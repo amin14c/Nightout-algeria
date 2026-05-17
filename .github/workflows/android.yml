@@ -23,16 +23,15 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # --- الحل الأبسط لإنشاء Wrapper ---
-    # نقوم بحذف الملف التالف فقط إذا كان موجوداً، ثم نستخدم الأمر wrapper
+    # --- الترتيب الصحيح ---
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
     - name: Generate Gradle Wrapper
       run: |
         rm -f gradle/wrapper/gradle-wrapper.jar
         ./gradlew wrapper --gradle-version 8.5.0
-    # ----------------------------------
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    # -----------------------
 
     - name: Setup Real Projects Secrets
       env:
