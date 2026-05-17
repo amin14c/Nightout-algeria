@@ -23,24 +23,17 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # --- الحل الجذري ---
-    - name: Build Gradle Wrapper from scratch
+    # --- الحل النهائي ---
+    - name: Fix Gradle Wrapper
       run: |
         # 1. حذف الملف التالف إذا وجد
         rm -f gradle/wrapper/gradle-wrapper.jar
         
-        # 2. تحميل نسخة 8.5.0 من Gradle
-        wget -q https://services.gradle.org/distributions/gradle-8.5.0-bin.zip
-        unzip -q gradle-8.5.0-bin.zip
+        # 2. تنزيل gradle-wrapper.jar الصحيح (بدون فك ضغط)
+        curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.5.0/gradle/wrapper/gradle-wrapper.jar
         
-        # 3. استخدام النسخة المحملة لإنشاء ملف wrapper صحيح
-        gradle-8.5.0/bin/gradle wrapper --gradle-version 8.5.0
-        
-        # 4. منح الصلاحية للملف الذي تم إنشاؤه
+        # 3. منح صلاحية التنفيذ
         chmod +x gradlew
-        
-        # 5. تنظيف الملفات المؤقتة (إبقاء المشروع نظيفاً)
-        rm -rf gradle-8.5.0 gradle-8.5.0-bin.zip
     # -------------------
 
     - name: Setup Real Projects Secrets
